@@ -12,10 +12,11 @@
 
 Если 50% 0 а 50% 1 то она не разьеж.
 """
+from utils import is_sparse_matrix, SRC_PATH
 
 
 def main():
-    pass
+    print(is_sparse_matrix(SRC_PATH + 'test.txt'))
 
 
 if __name__ == '__main__':
