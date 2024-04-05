@@ -11,5 +11,8 @@ def is_sparse_matrix(matrix_file: str):
         return True
 
 
+def print_matrix(matrix_file, output_file):
+    pass
+
 def is_correctly_structurized_matrix():
     pass
