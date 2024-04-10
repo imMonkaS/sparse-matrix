@@ -187,6 +187,11 @@ density: {self.get_density()}
         with open(output_file_path, 'w') as f:
             f.write('')
         with open(output_file_path, 'a') as f:
+            f.write(f'Разреженность: {self.get_sparsity()}\n')
+            if self.is_sparse():
+                f.write('Матрица разреженная\n')
+            else:
+                f.write('Матрица не разреженная\n')
             for i in ht_range:
                 for j in ht_range:
                     if i == j:
@@ -221,7 +226,7 @@ density: {self.get_density()}
             else:
                 bigger_elements.append(int(pos))
 
-        elements = lesser_elements + bigger_elements
+        elements = bigger_elements + lesser_elements
         elements_counter = 0
         positions_counter = 0
         for pos in positions:
@@ -237,10 +242,7 @@ density: {self.get_density()}
         return 1 - self.get_density()
 
     def get_density(self) -> float:
-        diagonal = len([_ for _ in self._diagonal if _ != self._predominant])
-        off_diagonal = len(self._positions) * 2
-
-        return round((diagonal + off_diagonal) / self._size**2, 2)
+        return round((len(self._diagonal) + len(self._positions)) / self._size**2, 2)
 
     def is_sparse(self) -> bool:
         if self.get_sparsity() > 0.5:

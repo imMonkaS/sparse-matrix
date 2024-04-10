@@ -1,3 +1,5 @@
 venv/
 .idea/
 app/__pycache__/
+app/sources/report/10000_65
+app/sources/report/10000_95
