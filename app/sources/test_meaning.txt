@@ -1,14 +1,5 @@
-predominant: 0 (преобладающий элемент)
-1
-0 1
-0 0 0
-0 0 0 2
-1 0 0 1 1
-
-матрица симметрична, поэтому
-
-1 0 0 0 1
-0 1 0 0 0
-0 0 0 0 0
-0 0 0 2 1
-1 0 0 1 1
+predominant: 0
+diagonal: 11 22 33 44 55
+lower_triangle_elem: 4 5 8
+lower_triangle_row: 2 1 2
+lower_triangle_col: 0 0 1
