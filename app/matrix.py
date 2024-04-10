@@ -3,13 +3,35 @@ from typing import Tuple, List, Union
 
 
 class SparseMatrix:
-    def __init__(self):
+    def __init__(
+            self,
+            positions: List[Tuple[Union[str, int], int, int]] = None,
+            diagonal: List[Union[str, int]] = None,
+            size=0,
+            predominant='0',
+            symmetric: bool = True
+    ):
         # positions stored as: [(value, row, column)]
-        self._positions: List[Tuple[Union[str, int], int, int]] = []
-        self._diagonal: List[Union[str, int]] = []
-        self._size = len(self._diagonal)
+        self._positions = [] if positions is None else positions
+        self._diagonal = [] if diagonal is None else diagonal
+        self._size = size
+        self._predominant = predominant
+        self._symmetric: symmetric
+
+    def copy(self):
+        return SparseMatrix(self._positions, self._diagonal, self._size, self._predominant, self._symmetric)
+
+    def clear(self):
+        self._size = 0
+        self._diagonal = []
+        self._positions = []
         self._predominant = '0'
-        self._symmetric: bool = True
+        self._symmetric = True
+
+    def matrix_filled(self) -> bool:
+        if len(self._diagonal) == 0:
+            return False
+        return True
 
     def print_matrix_data(self):
         print(f'''positions: {self._positions}
@@ -28,6 +50,8 @@ density: {self.get_density()}
             rand_end: int,
             predominant: str = '0'
     ) -> None:
+        self.clear()
+
         numbers_amount = round((1 - sparsity) * size**2)
         diagonal_numbers_amount = random.randint(0, min(numbers_amount, size))
         non_diagonal_numbers_amount = numbers_amount - diagonal_numbers_amount
@@ -63,6 +87,8 @@ density: {self.get_density()}
         self._predominant = predominant
 
     def read_matrix_from_file(self, input_file_path: str, symmetric: bool = True) -> None:
+        self.clear()
+
         with open(input_file_path, 'r') as f:
             self._predominant = f.readline().strip()
             for el in f.readline().strip().split():
@@ -183,7 +209,29 @@ density: {self.get_density()}
                 f.write('\n')
 
     def change_values(self, b: int) -> None:
-        pass
+        positions = self._positions.copy()
+        positions += [(int(self._diagonal[i]), i, i) for i in range(len(self._diagonal)) if self._diagonal[i] != self._predominant]
+        positions = sorted(positions, key=lambda x: (x[1], x[2]))
+
+        lesser_elements = []
+        bigger_elements = []
+        for pos in [el[0] for el in positions]:
+            if int(pos) <= b:
+                lesser_elements.append(int(pos))
+            else:
+                bigger_elements.append(int(pos))
+
+        elements = lesser_elements + bigger_elements
+        elements_counter = 0
+        positions_counter = 0
+        for pos in positions:
+            if pos[1] == pos[2]:
+                self._diagonal[pos[1]] = elements[elements_counter]
+            else:
+                self._positions[positions_counter] = (elements[elements_counter], pos[1], pos[2])
+                positions_counter += 1
+            elements_counter += 1
+        self._symmetric = False
 
     def get_sparsity(self) -> float:
         return 1 - self.get_density()

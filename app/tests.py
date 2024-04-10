@@ -50,3 +50,14 @@ def test_head_tail_file():
     matrix1.make_file_of_matrix(SRC_PATH + 'head_tails_file/data.txt')
     matrix1.print_matrix_to_file(SRC_PATH + 'head_tails_file/gen_file.txt')
     matrix1.print_matrix_to_file(SRC_PATH + 'head_tails_file/gen_file3to2.txt', 3, 2)
+
+
+def test_algorithm():
+    matrix = SparseMatrix()
+    # matrix.generate(5, 0.6, 1, 9)
+    # matrix.make_file_of_matrix(SRC_PATH + 'algo/data.txt')
+    matrix.read_matrix_from_file(SRC_PATH + 'algo/data.txt')
+    matrix.print_matrix()
+    matrix.change_values(5)
+    print()
+    matrix.print_matrix()
