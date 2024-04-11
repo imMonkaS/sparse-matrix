@@ -3,6 +3,9 @@ from typing import Tuple, List, Union
 
 
 class SparseMatrix:
+    """
+    Класс разреженной матрицы
+    """
     def __init__(
             self,
             positions: List[Tuple[Union[str, int], int, int]] = None,
@@ -11,6 +14,15 @@ class SparseMatrix:
             predominant='0',
             symmetric: bool = True
     ):
+        """
+        Конструктор с копированием
+        Args:
+            positions: позиции значений и сами значения
+            diagonal: значения диагонали
+            size: размерность матрицы
+            predominant: самый часто встречаеющийся элемент
+            symmetric: симметрична ли матрица
+        """
         # positions stored as: [(value, row, column)]
         self._positions = [] if positions is None else positions
         self._diagonal = [] if diagonal is None else diagonal
@@ -18,10 +30,18 @@ class SparseMatrix:
         self._predominant = predominant
         self._symmetric: symmetric
 
-    def copy(self):
+    def copy(self) -> 'SparseMatrix':
+        """
+        создать копию матрицы
+        Returns:
+
+        """
         return SparseMatrix(self._positions, self._diagonal, self._size, self._predominant, self._symmetric)
 
     def clear(self):
+        """
+        очистить все поля
+        """
         self._size = 0
         self._diagonal = []
         self._positions = []
@@ -34,6 +54,9 @@ class SparseMatrix:
         return True
 
     def print_matrix_data(self):
+        """
+        Вывести всю инфу по матрице
+        """
         print(f'''positions: {self._positions}
 diagonal: {self._diagonal}
 size: {self._size}
@@ -50,6 +73,15 @@ density: {self.get_density()}
             rand_end: int,
             predominant: str = '0'
     ) -> None:
+        """
+        сгенерировать матрицу с разреженностью sparsity с возможной погрешностью в +- 0.1
+        Args:
+            size: размерность
+            sparsity: разреженность до сотых
+            rand_start: начало диапазона случайных чисел
+            rand_end: конец диапазона случайных чисел
+            predominant: Самый часто встречающийся элемент
+        """
         self.clear()
 
         numbers_amount = round((1 - sparsity) * size**2)
@@ -87,6 +119,12 @@ density: {self.get_density()}
         self._predominant = predominant
 
     def read_matrix_from_file(self, input_file_path: str, symmetric: bool = True) -> None:
+        """
+        считать матрицу из файла
+        Args:
+            input_file_path: путь до файла
+            symmetric: симметрична ли матрица в файле
+        """
         self.clear()
 
         with open(input_file_path, 'r') as f:
@@ -118,6 +156,11 @@ density: {self.get_density()}
         self._size = len(self._diagonal)
 
     def make_file_of_matrix(self, output_file_path: str) -> None:
+        """
+        Записать матрицу в файл в формате SSS
+        Args:
+            output_file_path: путь до файла записи
+        """
         with open(output_file_path, 'w') as f:
             f.write('')
         with open(output_file_path, 'a') as f:
@@ -147,6 +190,15 @@ density: {self.get_density()}
             head: int = None,
             tail: int = None
     ) -> None:
+        """
+        вывести матрицу (либо часть матрицы)
+        Args:
+            head: элементов вывести в начале
+            tail: элементов вывести в конце
+
+        Returns:
+
+        """
         if head is not None and tail is not None:
             ht_range = list(range(0, head)) + list(range(self._size - tail, self._size))
         else:
@@ -179,6 +231,13 @@ density: {self.get_density()}
             head: int = None,
             tail: int = None
     ) -> None:
+        """
+        вывести матрицу (либо часть матрицы)
+        Args:
+            output_file_path: путь до файла для записи
+            head: элементов вывести в начале
+            tail: элементов вывести в конце
+        """
         if head is not None and tail is not None:
             ht_range = list(range(0, head)) + list(range(self._size - tail, self._size))
         else:
@@ -214,6 +273,12 @@ density: {self.get_density()}
                 f.write('\n')
 
     def change_values(self, b: int) -> None:
+        """
+        Основной алгоритм по заданию. Заменяет значения в матрице.
+        На места ненулевых элементов матрицы вначале помещаются все её ненулевые элементы большие b, а затем ненулевые элементы меньшие b.
+        Args:
+            b: число для алгоритма
+        """
         positions = self._positions.copy()
         positions += [(int(self._diagonal[i]), i, i) for i in range(len(self._diagonal)) if self._diagonal[i] != self._predominant]
         positions = sorted(positions, key=lambda x: (x[1], x[2]))
@@ -239,12 +304,27 @@ density: {self.get_density()}
         self._symmetric = False
 
     def get_sparsity(self) -> float:
+        """
+        Найти разреженность.
+        Returns:
+            float, разреженность до сотых
+        """
         return 1 - self.get_density()
 
     def get_density(self) -> float:
+        """
+        Найти обратное разрежнности (1 - разреженность)
+        Returns:
+            float, до сотых
+        """
         return round((len(self._diagonal) + len(self._positions)) / self._size**2, 2)
 
     def is_sparse(self) -> bool:
+        """
+        Является ли матрица разреженной (нулей больше половины всех элементов)
+        Returns:
+            bool
+        """
         if self.get_sparsity() > 0.5:
             return True
         return False

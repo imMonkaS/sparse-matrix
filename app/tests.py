@@ -93,7 +93,7 @@ def test_time(data_file, b, output_file, time_file, head=None, tail=None):
         total_algo_time = end_algo_time - algo_time
 
         output_time = time.perf_counter()
-        matrix.print_matrix_to_file(output_file, head, tail)
+        # matrix.print_matrix_to_file(output_file, head, tail)
         end_output_time = time.perf_counter()
         total_output_time = end_output_time - output_time
 
@@ -102,35 +102,3 @@ def test_time(data_file, b, output_file, time_file, head=None, tail=None):
         f.write(f'{datetime.datetime.now()}: Выполнение алгоритма заняло {total_algo_time*1000:.3f} мс или {total_algo_time:.6f} с\n\n')
         f.write(f'{datetime.datetime.now()}: Вывод матрицы занял {total_output_time*1000:.3f} мс или {total_output_time:.6f} с\n\n')
     # -------------------------------------
-
-
-def binary_search(pos: Tuple[int, int], items: List[Tuple[Union[str, int], int, int]]):
-    items = [
-        (1, 0, 1),
-        (2, 3, 2),
-        (3, 4, 2),
-        (4, 0, 6),
-        (5, 0, 4),
-        (8, 0, 10),
-        (6, 6, 8),
-        (7, 1, 10),
-    ]
-
-    pos = (0, 4)
-
-    items = sorted(items, key=lambda x: (x[1], x[2]))
-    print(items)
-    l = 0
-    r = len(items)
-    while l <= r:
-        mid = l + (r - l) // 2
-        if items[mid][1] == pos[0]:
-            print(mid, items[mid][0])
-            return
-        elif items[mid][1] < pos[0]:
-            l = mid + 1
-        else:
-            r = mid - 1
-
-    print("-1")
-    return
